@@ -34,6 +34,40 @@ INSERT INTO roles(name) VALUES('ROLE_ADMIN');
 }
 ```
 
+
+   # message add
+        `POST localhost:8080/message/2`
+        ```
+       {
+            "text":  "Text5"
+        }
+        ```
+        
+        # comments add
+        `POST localhost:8080/comments/4/polzovatel/1`
+        ```
+       {
+            "text": "Memsas2323d4"
+        }
+        ``` 
+        
+          # user
+        `GET localhost:8080/api/user/1`
+        
+        
+          #  add friends
+        `POST localhost:8080/you/2/add/4`
+        
+         # all message
+        `POST localhost:8080/messageAll`
+      
+      
+   
+        
+        
+
+
+
 # Make Request to Secure API
 `localhost:8080/api/test/admin`
 
