@@ -52,16 +52,20 @@ INSERT INTO roles(name) VALUES('ROLE_ADMIN');
         ``` 
         
           # user
+           ```
         `GET localhost:8080/api/user/1`
-        
+         ```
         
           #  add friends
+           ```
         `POST localhost:8080/you/2/add/4`
+         ```
+          ```
         
          # all message
         `POST localhost:8080/messageAll`
       
-      
+       ```
    
         
         
