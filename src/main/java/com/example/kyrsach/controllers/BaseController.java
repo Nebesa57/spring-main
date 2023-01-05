@@ -8,6 +8,7 @@ import com.example.kyrsach.repository.CommentsRepository;
 import com.example.kyrsach.repository.MessageRepository;
 import com.example.kyrsach.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -57,7 +58,6 @@ public class BaseController {
         commentsRepository.findAllByOwner(users.get(0)).forEach(comments::add);
         return comments;
     }
-
 
 
     //Yes
