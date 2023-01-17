@@ -57,5 +57,8 @@ public class FriendsController {
         friendsRepository.deleteById(friends.get(0).getId());
         return friends;
     }
-
+    @GetMapping("currentUser")
+    public User getCurrentUser(@RequestParam Long id){
+        return userRepository.findById(id).get();
+    }
 }

@@ -4,6 +4,7 @@ package com.example.kyrsach.controllers;
 import com.example.kyrsach.models.Comments;
 import com.example.kyrsach.models.Message;
 import com.example.kyrsach.models.User;
+import com.example.kyrsach.pojo.MessagePojo;
 import com.example.kyrsach.repository.CommentsRepository;
 import com.example.kyrsach.repository.MessageRepository;
 import com.example.kyrsach.repository.UserRepository;
@@ -36,21 +37,21 @@ public class BaseController {
 
     //Yes
     @PostMapping(value = "message/{id}")
-    public Message createMessage(@RequestBody Message newMessage,  @PathVariable("id") Long id){
+    public Message createMessage(@RequestBody MessagePojo newMessage, @PathVariable("id") Long id){
         return addMessage(newMessage,id);
     }
-    private Message addMessage(Message message,Long id){
-        return  messageRepository.save(new Message(message.getText(),userRepository.findById(id).get()));
+    private Message addMessage(MessagePojo message,Long id){
+        return  messageRepository.save(new Message(message.getMessage(),userRepository.findById(id).get()));
     }
     //Yes
-    @PostMapping(value = "messageAll")
+    @GetMapping(value = "messageAll")
     public List allMesage(){
         messages = new ArrayList<>();
         messageRepository.findAll().forEach(messages::add);
         return messages;
     }
     //Yes
-    @PostMapping(value = "commentAll/{id}")
+    @GetMapping(value = "commentAll/{id}")
     public List allComments(@PathVariable("id") Long id){
         comments = new ArrayList<>();
         users = new ArrayList<>();
@@ -62,10 +63,10 @@ public class BaseController {
 
     //Yes
     @PostMapping(value = "comments/{userid}/polzovatel/{polzid}")
-    public Comments createComments (@RequestBody Comments newComments,  @PathVariable("userid") Long id, @PathVariable("polzid") Long pozid){
+    public Comments createComments (@RequestBody MessagePojo newComments,  @PathVariable("userid") Long id, @PathVariable("polzid") Long pozid){
         return addComents(newComments,id,pozid);
     }
-    private Comments addComents(Comments comments,Long id, Long twoID){
-        return commentsRepository.save(new  Comments(comments.getText(),userRepository.findById(id).get(),userRepository.findById(twoID).get()));
+    private Comments addComents(MessagePojo comments,Long id, Long twoID){
+        return commentsRepository.save(new  Comments(comments.getComment(),userRepository.findById(id).get(),userRepository.findById(twoID).get()));
     }
 }
