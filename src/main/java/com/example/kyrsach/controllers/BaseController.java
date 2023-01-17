@@ -10,6 +10,8 @@ import com.example.kyrsach.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -67,5 +69,11 @@ public class BaseController {
     }
     private Comments addComents(Comments comments,Long id, Long twoID){
         return commentsRepository.save(new  Comments(comments.getText(),userRepository.findById(id).get(),userRepository.findById(twoID).get()));
+    }
+
+    @MessageMapping("/changeMessage")
+    @SendTo("/topic/activity")
+    public Message message(Message message) {
+        return messageRepository.save(message);
     }
 }
