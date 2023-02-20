@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class MessagePojo {
+public class MessageDto {
     private String message;
     private String comment;
 }

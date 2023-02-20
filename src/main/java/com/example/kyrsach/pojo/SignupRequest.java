@@ -1,12 +1,15 @@
 package com.example.kyrsach.pojo;
 
+import javax.validation.constraints.Size;
 import java.util.Set;
 
 public class SignupRequest {
-	
+	@Size(min = 4,max=50)
 	private String username;
+	@Size(min = 4,max=50)
 	private String email;
 	private Set<String> roles;
+	@Size(min = 4,max=50)
 	private String password;
 	public String getUsername() {
 		return username;

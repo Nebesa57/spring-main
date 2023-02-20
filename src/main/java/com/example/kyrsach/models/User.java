@@ -19,6 +19,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "users",
@@ -31,9 +34,15 @@ public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+	@NotEmpty(message = "Никнейм не введен")
+	@Size(min = 4,max=50,message = "Никнейм должен быть в диапозоне от 4 до 50  символов")
 	private String username;
+	@NotEmpty(message = "Почта не введена")
+	@Size(min = 4,max=50,message = "Почта должна быть в диапозоне от 4 до 50  символов")
+	@Email
 	private String email;
+	@NotEmpty(message = "Пароль не введен")
+	@Size(min = 4,max=150,message = "Пароль должен быть в диапозоне от 4 до 50  символов")
 	private String password;
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "user_roles",

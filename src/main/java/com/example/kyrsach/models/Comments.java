@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 
 @Entity
@@ -15,6 +16,7 @@ public class Comments {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
+    @Size(min=2, max=50)
     private String text;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "author_id")

@@ -30,6 +30,8 @@ import com.example.kyrsach.repository.RoleRepository;
 import com.example.kyrsach.repository.UserRepository;
 import com.example.kyrsach.service.UserDetailsImpl;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -74,7 +76,7 @@ public class AuthController {
 	}
 	
 	@PostMapping("/signup")
-	public ResponseEntity<?> registerUser(@RequestBody SignupRequest signupRequest) {
+	public ResponseEntity<?> registerUser(@RequestBody @Valid SignupRequest signupRequest) {
 		
 		if (userRespository.existsByUsername(signupRequest.getUsername())) {
 			return ResponseEntity
