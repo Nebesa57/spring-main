@@ -17,7 +17,7 @@ public class Message {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Integer id;
-    @Size(min=2, max=50)
+    @Size(min=2, max=50,message = "Введен слишком большой пароли или слишком маленький диапазон от 2 до 50")
     private String text;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
