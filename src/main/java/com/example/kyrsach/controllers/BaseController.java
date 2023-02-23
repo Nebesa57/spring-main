@@ -1,9 +1,13 @@
 package com.example.kyrsach.controllers;
 
 
+import com.example.kyrsach.mappers.CommentsMapper;
+import com.example.kyrsach.mappers.MessageMapper;
 import com.example.kyrsach.models.Comments;
 import com.example.kyrsach.models.Message;
 import com.example.kyrsach.models.User;
+import com.example.kyrsach.pojo.CommentsDto;
+import com.example.kyrsach.pojo.MessageAndCommentsDto;
 import com.example.kyrsach.pojo.MessageDto;
 import com.example.kyrsach.repository.CommentsRepository;
 import com.example.kyrsach.repository.MessageRepository;
@@ -29,12 +33,18 @@ public class BaseController {
 
     List<Message> messages;
     List<Comments> comments;
-
+    List<MessageDto> messageDtos;
     List<User> users;
+    List<CommentsDto> commentsDtos;
+
 
     private final CommentsService commentsService;
-    private final MessageService messageService;
+
+    private final CommentsMapper commentsMapper;
+    private final MessageMapper messageMapper;
+    @Autowired
     private final UserService userService;
+
     @Autowired
     private UserRepository userRepository;
 
@@ -43,41 +53,49 @@ public class BaseController {
 
     //Yes
     @PostMapping(value = "message/{id}")
-    public Message createMessage(@RequestBody MessageDto newMessage, @PathVariable("id") Long id) {
+    public Message createMessage(@RequestBody MessageAndCommentsDto newMessage, @PathVariable("id") Long id) {
         return addMessage(newMessage, id);
     }
 
-    private Message addMessage(MessageDto message, Long id) {
+    private Message addMessage(MessageAndCommentsDto message, Long id) {
         User user = userService.findById(id).get();
         return messageRepository.save(new Message(message.getMessage(), userService.findById(id).get()));
     }
 
     //Yes
     @GetMapping(value = "messageAll")
-    public List<Message> allMesage() {
+    public List<MessageDto> allMesage() {
         messages = new ArrayList<>();
+        messageDtos = new ArrayList<>();
         messageRepository.findAll().forEach(messages::add);
-        return messages;
+        for(Message message: messages){
+            messageDtos.add(messageMapper.toDTOList(message));
+        }
+        return messageDtos;
     }
 
     //Yes
     @GetMapping(value = "commentAll/{id}")
-    public List<Comments> allComments(@PathVariable("id") Long id) {
+    public List<CommentsDto> allComments(@PathVariable("id") Long id) {
         comments = new ArrayList<>();
         users = new ArrayList<>();
+        commentsDtos = new ArrayList<>();
         users.add(userService.findById(id).get());
         commentsService.findAllByOwner(users.get(0)).forEach(comments::add);
-        return comments;
+        for(Comments comment: comments){
+            commentsDtos.add(commentsMapper.toDTO(comment));
+        }
+        return commentsDtos;
     }
 
 
     //Yes
     @PostMapping(value = "comments/{userid}/polzovatel/{polzid}")
-    public Comments createComments(@RequestBody MessageDto newComments, @PathVariable("userid") Long id, @PathVariable("polzid") Long pozid) {
+    public Comments createComments(@RequestBody MessageAndCommentsDto newComments, @PathVariable("userid") Long id, @PathVariable("polzid") Long pozid) {
         return addComents(newComments, id, pozid);
     }
 
-    private Comments addComents(MessageDto comments, Long id, Long twoID) {
+    private Comments addComents(MessageAndCommentsDto comments, Long id, Long twoID) {
         return commentsRepository.save(new Comments(comments.getComment(), userService.findById(id).get(), userService.findById(twoID).get()));
     }
 

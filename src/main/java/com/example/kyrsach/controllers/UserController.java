@@ -24,10 +24,12 @@ public class UserController {
 
     private final UserService userService;
 
+    private final UserMapper userMapper;
+
     @GetMapping("user/{id}")
     public UserDto getUser(@PathVariable("id") Long id) {
-        User user = userRepository.findById(id).get();
-        return UserMapper.INSTANCE.toDTO(user);
+        User user = userService.findById(id).get();
+        return userMapper.INSTANCE.toDTO(user);
     }
 
 

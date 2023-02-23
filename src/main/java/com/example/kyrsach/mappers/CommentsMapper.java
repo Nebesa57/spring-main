@@ -1,9 +1,14 @@
 package com.example.kyrsach.mappers;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
 
-@Mapper
+import com.example.kyrsach.models.Comments;
+import com.example.kyrsach.pojo.CommentsDto;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+
+@Mapper(componentModel = "spring")
 public interface CommentsMapper {
-    CommentsMapper INSTANCE = Mappers.getMapper(CommentsMapper.class);
+    @Mapping(source = "author",target = "userDto")
+    @Mapping(source = "author",target = "ownerDto")
+    CommentsDto toDTO(Comments comments);
 }

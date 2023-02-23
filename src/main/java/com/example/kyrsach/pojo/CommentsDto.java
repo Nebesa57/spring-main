@@ -1,13 +1,10 @@
 package com.example.kyrsach.pojo;
 
-import com.example.kyrsach.models.User;
 import lombok.Data;
 
-import javax.persistence.Entity;
-
-
 @Data
-public class MessageDto {
+public class CommentsDto {
     private String text;
     private UserDto userDto;
+    private UserDto ownerDto;
 }

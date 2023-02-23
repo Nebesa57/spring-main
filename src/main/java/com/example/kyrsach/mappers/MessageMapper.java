@@ -1,10 +1,18 @@
 package com.example.kyrsach.mappers;
 
+import com.example.kyrsach.models.Message;
+
+import com.example.kyrsach.pojo.MessageDto;
+
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
+import org.mapstruct.Mapping;
 
-@Mapper
+
+
+
+@Mapper(componentModel = "spring")
 public interface MessageMapper {
-    MessageMapper INSTANCE = Mappers.getMapper(MessageMapper.class);
 
+    @Mapping(source = "author",target = "userDto")
+    MessageDto toDTOList(Message message);
 }
