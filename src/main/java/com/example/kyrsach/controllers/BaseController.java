@@ -28,8 +28,7 @@ import java.util.List;
 @RequestMapping()
 @RequiredArgsConstructor
 public class BaseController {
-    @Autowired
-    private MessageRepository messageRepository;
+
 
     List<Message> messages;
     List<Comments> comments;
@@ -38,15 +37,14 @@ public class BaseController {
     List<CommentsDto> commentsDtos;
 
 
+    @Autowired
+    private MessageRepository messageRepository;
     private final CommentsService commentsService;
 
     private final CommentsMapper commentsMapper;
     private final MessageMapper messageMapper;
     @Autowired
     private final UserService userService;
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
     private CommentsRepository commentsRepository;
