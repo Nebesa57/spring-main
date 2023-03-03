@@ -2,6 +2,11 @@ package com.example.kyrsach.controllers;
 
 import com.example.kyrsach.mappers.CommentsMapper;
 import com.example.kyrsach.mappers.MessageMapper;
+import com.example.kyrsach.models.Message;
+import com.example.kyrsach.models.User;
+import com.example.kyrsach.pojo.MessageAndCommentsDto;
+import com.example.kyrsach.pojo.MessageDto;
+import com.example.kyrsach.pojo.UserDto;
 import com.example.kyrsach.repository.CommentsRepository;
 import com.example.kyrsach.repository.MessageRepository;
 import com.example.kyrsach.service.CommentsService;
@@ -10,58 +15,76 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.util.TestPropertyValues;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.context.ApplicationContextInitializer;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.shaded.com.github.dockerjava.core.MediaType;
+import org.testcontainers.shaded.com.google.common.net.HttpHeaders;
 import org.testcontainers.utility.DockerImageName;
 
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 @Testcontainers
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ContextConfiguration(initializers = {BaseControllerTest.Initializer.class})
 public class BaseControllerTest {
 
     @Container
-    public static PostgreSQLContainer container = new PostgreSQLContainer("postgres:14.4")
-            .withDatabaseName("example_db")
-            .withUsername("Test")
-            .withPassword("Test");
-
-    @Container
-    public static GenericContainer<?> redis =
-            new GenericContainer<>(DockerImageName.parse("redis:6.2-alpine")).withExposedPorts(6379);
-
-
-    @BeforeAll
-    public static void setUp(){
-        container.withReuse(true);
-        container.withInitScript("/Database/db.sql");
-        container.start();
-        redis.start();
+    public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:14.4")
+            .withDatabaseName("mydb")
+            .withUsername("myuser")
+            .withPassword("mypass")
+            .withInitScript("db.sql");
+    static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+        public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
+            TestPropertyValues.of(
+                    "spring.datasource.url=" + postgreSQLContainer.getJdbcUrl(),
+                    "spring.datasource.username=" + postgreSQLContainer.getUsername(),
+                    "spring.datasource.password=" + postgreSQLContainer.getPassword()
+            ).applyTo(configurableApplicationContext.getEnvironment());
+        }
     }
-
-    @DynamicPropertySource
-    public static void overrideProperties(DynamicPropertyRegistry registry){
-        registry.add("spring.datasource.url", container::getJdbcUrl);
-        registry.add("spring.datasource.username", container::getUsername);
-        registry.add("spring.datasource.password", container::getPassword);
-        registry.add("spring.datasource.driver-class-name", container::getDriverClassName);
-    }
+    @Autowired
+    private TestRestTemplate restTemplate;
+    @Autowired
+    private MessageRepository messageRepository;
 
 
     @Test
     public void testCreateUser(){
+        ResponseEntity<UserDto> response = restTemplate.getForEntity("/api/user/1", UserDto.class);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        UserDto userDto = response.getBody();
+        assertNotNull(userDto);
+        assertEquals(1L, userDto.getId());
+        assertEquals("admin", userDto.getUsername());
+    }
+
+
+    @Test
+    public void testAllMessage() throws Exception {
 
     }
 
 
 
 
-    @AfterAll
-    public static void tearDown(){
-        container.stop();
-        redis.stop();
-    }
 }

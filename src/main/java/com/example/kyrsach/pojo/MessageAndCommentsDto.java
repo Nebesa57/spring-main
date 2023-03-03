@@ -8,4 +8,5 @@ import lombok.Setter;
 public class MessageAndCommentsDto {
     private String message;
     private String comment;
+
 }

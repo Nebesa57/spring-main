@@ -35,8 +35,6 @@ public class BaseController {
     List<MessageDto> messageDtos;
     List<User> users;
     List<CommentsDto> commentsDtos;
-
-
     @Autowired
     private MessageRepository messageRepository;
     private final CommentsService commentsService;

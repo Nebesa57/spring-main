@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd">
+
+    <include file="01-changeset-users-table.xml" relativeToChangelogFile="true"/>
+    <include file="02-changeset-comments-table.xml" relativeToChangelogFile="true"/>
+    <include file="03-changeset-friends-table.xml" relativeToChangelogFile="true"/>
+    <include file="04-changeset-message-table.xml" relativeToChangelogFile="true"/>
+    <include file="05-changeset-roles-table.xml" relativeToChangelogFile="true"/>
+    <include file="06-changeset-user_roles-table.xml" relativeToChangelogFile="true"/>
+    </databaseChangeLog>
