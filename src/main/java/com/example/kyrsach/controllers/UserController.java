@@ -12,7 +12,11 @@ import com.example.kyrsach.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/")
@@ -28,8 +32,15 @@ public class UserController {
 
     @GetMapping("user/{id}")
     public UserDto getUser(@PathVariable("id") Long id) {
-        User user = userService.findById(id).get();
-        return userMapper.INSTANCE.toDTO(user);
+        try {
+            User user = userService.findById(id).get();
+            return userMapper.INSTANCE.toDTO(user);
+        }catch (NoSuchElementException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"User not found", e);
+        }
+        catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong", e);
+        }
     }
 
 

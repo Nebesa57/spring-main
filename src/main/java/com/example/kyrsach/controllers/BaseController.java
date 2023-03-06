@@ -17,12 +17,15 @@ import com.example.kyrsach.service.MessageService;
 import com.example.kyrsach.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping()
@@ -61,27 +64,37 @@ public class BaseController {
     //Yes
     @GetMapping(value = "messageAll")
     public List<MessageDto> allMesage() {
-        messages = new ArrayList<>();
-        messageDtos = new ArrayList<>();
-        messageRepository.findAll().forEach(messages::add);
-        for(Message message: messages){
-            messageDtos.add(messageMapper.toDTOList(message));
+        try {
+            messages = new ArrayList<>();
+            messageDtos = new ArrayList<>();
+            messageRepository.findAll().forEach(messages::add);
+            for (Message message : messages) {
+                messageDtos.add(messageMapper.toDTOList(message));
+            }
+            return messageDtos;
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong", e);
         }
-        return messageDtos;
     }
 
     //Yes
     @GetMapping(value = "commentAll/{id}")
     public List<CommentsDto> allComments(@PathVariable("id") Long id) {
-        comments = new ArrayList<>();
-        users = new ArrayList<>();
-        commentsDtos = new ArrayList<>();
-        users.add(userService.findById(id).get());
-        commentsService.findAllByOwner(users.get(0)).forEach(comments::add);
-        for(Comments comment: comments){
-            commentsDtos.add(commentsMapper.toDTO(comment));
+        try {
+            comments = new ArrayList<>();
+            users = new ArrayList<>();
+            commentsDtos = new ArrayList<>();
+            users.add(userService.findById(id).get());
+            commentsService.findAllByOwner(users.get(0)).forEach(comments::add);
+            for (Comments comment : comments) {
+                commentsDtos.add(commentsMapper.toDTO(comment));
+            }
+            return commentsDtos;
+        } catch (NoSuchElementException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found", e);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong", e);
         }
-        return commentsDtos;
     }
 
 

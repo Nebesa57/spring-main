@@ -25,78 +25,40 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "users",
-		uniqueConstraints = {
-				@UniqueConstraint(columnNames = "username"),
-				@UniqueConstraint(columnNames = "email")
-		})
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = "username"),
+                @UniqueConstraint(columnNames = "email")
+        })
+@Getter
+@Setter
 public class User {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	@NotEmpty(message = "Никнейм не введен")
-	@Size(min = 4,max=50,message = "Никнейм должен быть в диапозоне от 4 до 50  символов")
-	private String username;
-	@NotEmpty(message = "Почта не введена")
-	@Size(min = 4,max=50,message = "Почта должна быть в диапозоне от 4 до 50  символов")
-	@Email
-	private String email;
-	@NotEmpty(message = "Пароль не введен")
-	@Size(min = 4,max=150,message = "Пароль должен быть в диапозоне от 4 до 50  символов")
-	private String password;
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "user_roles",
-				joinColumns = @JoinColumn(name = "user_id"),
-				inverseJoinColumns = @JoinColumn(name = "role_id"))
-	private Set<Role> roles = new HashSet<>();
 
-	public User() {
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @NotEmpty(message = "Никнейм не введен")
+    @Size(min = 4, max = 50, message = "Никнейм должен быть в диапозоне от 4 до 50  символов")
+    private String username;
+    @NotEmpty(message = "Почта не введена")
+    @Size(min = 4, max = 50, message = "Почта должна быть в диапозоне от 4 до 50  символов")
+    @Email
+    private String email;
+    @NotEmpty(message = "Пароль не введен")
+    @Size(min = 4, max = 150, message = "Пароль должен быть в диапозоне от 4 до 50  символов")
+    private String password;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
 
-	public User(String username, String email, String password) {
-		this.username = username;
-		this.email = email;
-		this.password = password;
-	}
+    public User() {
+    }
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public Set<Role> getRoles() {
-		return roles;
-	}
-
-	public void setRoles(Set<Role> roles) {
-		this.roles = roles;
-	}
+    public User(String username, String email, String password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
 
 }

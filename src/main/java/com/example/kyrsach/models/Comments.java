@@ -14,9 +14,9 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 public class Comments {
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Size(min=2, max=50)
+    @Size(min = 2, max = 50)
     private String text;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "author_id")

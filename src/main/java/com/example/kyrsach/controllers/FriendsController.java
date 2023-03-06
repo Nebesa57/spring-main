@@ -15,10 +15,13 @@ import com.example.kyrsach.service.MessageService;
 import com.example.kyrsach.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping()
@@ -56,6 +59,7 @@ public class FriendsController {
     //Yes
     @GetMapping(value = "allfriends/{id}")
     public List<FriendsDto> AllFriends( @PathVariable("id") Long id) {
+        try {
         users = new ArrayList<>();
         friends = new ArrayList<>();
         friendsDtos = new ArrayList<>();
@@ -65,6 +69,11 @@ public class FriendsController {
             friendsDtos.add(friendsMapper.toDTO(friends1));
         }
         return friendsDtos;
+        } catch (NoSuchElementException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found", e);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong", e);
+        }
     }
 
 
@@ -83,7 +92,13 @@ public class FriendsController {
     }
     @GetMapping("currentUser/{id}")
     public UserDto getCurrentUser(@PathVariable("id") Long id){
+        try {
         User user = userService.findById(id).get();
         return userMapper.toDTO(user);
+        } catch (NoSuchElementException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found", e);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong", e);
+        }
     }
 }
