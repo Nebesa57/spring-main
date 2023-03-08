@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -100,6 +101,7 @@ public class BaseController {
 
     //Yes
     @PostMapping(value = "comments/{userid}/polzovatel/{polzid}")
+    @PreAuthorize("#id == #pozid")
     public Comments createComments(@RequestBody MessageAndCommentsDto newComments, @PathVariable("userid") Long id, @PathVariable("polzid") Long pozid) {
         return addComents(newComments, id, pozid);
     }
