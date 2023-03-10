@@ -11,11 +11,15 @@ import com.example.kyrsach.repository.CommentsRepository;
 import com.example.kyrsach.repository.MessageRepository;
 import com.example.kyrsach.service.CommentsService;
 import com.example.kyrsach.service.UserService;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -43,12 +47,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @Testcontainers
-@SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT,
+        properties = {
+                "spring.liquibase.enabled=false"
+        })
 @ContextConfiguration(initializers = {BaseControllerTest.Initializer.class})
 public class BaseControllerTest {
 
     @Container
-    public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:14.4")
+    public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:14.7-alpine")
             .withDatabaseName("mydb")
             .withUsername("myuser")
             .withPassword("mypass")
@@ -62,6 +70,25 @@ public class BaseControllerTest {
             ).applyTo(configurableApplicationContext.getEnvironment());
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     @Autowired
     private TestRestTemplate restTemplate;
     @Autowired
@@ -81,7 +108,13 @@ public class BaseControllerTest {
 
     @Test
     public void testAllMessage() throws Exception {
-
+        ResponseEntity<List<MessageDto>> response = restTemplate.exchange("/messageAll", HttpMethod.GET, null,
+                new ParameterizedTypeReference<List<MessageDto>>() {
+                });
+        List<MessageDto> messageDtos = response.getBody();
+        assertNotNull(messageDtos);
+        assertEquals(1, messageDtos.size());
+        assertEquals("hello", messageDtos.get(0).getText());
     }
 
 
