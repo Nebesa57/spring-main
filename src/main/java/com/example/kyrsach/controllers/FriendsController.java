@@ -35,9 +35,6 @@ public class FriendsController {
 
     private final FriendsMapper friendsMapper;
     private final UserMapper userMapper;
-
-    private final CommentsService commentsService;
-    private final MessageService messageService;
     private final UserService userService;
     private final FriendsService friendsService;
     @Autowired

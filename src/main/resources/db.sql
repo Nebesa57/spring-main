@@ -19,5 +19,7 @@ VALUES (1, 'admin', 'admin@mail.ru', '2002'),
        (2, 'user22', 'user22', '2002');
 
 
-INSERT INTO message (id, text, user_id)
+/*INSERT INTO message (id, text, user_id)
 VALUES (1, 'hello', 1);
+*/
+create sequence hibernate_sequence;
